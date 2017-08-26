@@ -1,0 +1,29 @@
+##Hangman Game - Markdown
+
+
+1. The theme for the game is set to "Alternative Rock Bands
+"
+2.  I am going to use key events to listen for the letters that the players will type.
+
+3. I will  display the following on the page:
+	a. The number of total wins the person has
+	b. The number of total loses the person has
+	c. The # of total guesses the person has
+	d. A list of all the Guesses the person has made
+	e. A skeleton of dashes that gives the person an idea of the length of words in the band's name
+	f. A partially filled skeleton when the correct guesses are made
+	g. Instructions/Notes as the player continues to make guesses
+
+4. Any Key will get the game started BUT only alphabets will let you continue the game
+
+5. After the user wins/loses the game, the game will choose another band upon pressing a key.
+
+##### Hangman Game Bonuses - These are not included in this version
+
+1. Play a sound or song when the user guesses their word correctly, like in our demo.
+2. Write some stylish CSS rules to make a design that fits your game's theme.
+3. **HARD MODE:** Organize your game code as an object, except for the key events to get the letter guessed. This will be a challenge if you haven't coded with JavaScript before, but we encourage anyone already familiar with the language to try this out.
+4. Save your whole game and its properties in an object.
+5. Save any of your game's functions as methods, and call them underneath your object declaration using event listeners.
+6. Don't forget to place your global variables and functions above your object.
+   * Remember: global variables, then objects, then calls. 

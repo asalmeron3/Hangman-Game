@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>This be Arturo's Hangman-Game</title>
+</head>
+<body>
+		<!--Adding text to HTML so that the user knows what to do-->
+	<div id = "theScreen">
+		<h1> Alternative Rock - Hangman </h1> 
+		<p> Press any key to get started! </p>
+		<p> Total Wins: 0 </p> 
+		<p> Total Losses: 0 </p> 
+		<p> Number of Guesses Left : 12 </p>
+		<p> Your Guesses So Far: </p>
+
+	</div>
+	<!--Starting my Javascript for the game-->
+	<script type = "text/javascript">
+	//I am going to need variables to 1) keep up with the wins, loses, number of guesses left 2) store the computers letter 3) store the users current guess 4) store all of the users guesses copying this straigt from my psychic game
+		var wins  = 0;
+		var losses = 0;
+		var reveal = []; //empty array that I will manipulate to update with user's guess
+		var allGuess = []; //empty array to store all the guesses
+		var gLeft = 12; //the counter for guesses left this will change as you guess letters
+		var theLetters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+		var totalTries = gLeft; // # of total attempts you will have for guessing. this will not be changing throughout the game BUT it will 1) alwasy be the same as gLegt at the beginnning of the game 2) will be used as a point of reference to end the game
+		var message; //the message  = the instructions given to the user
+
+
+		var bands2000 = [ "Panic! At the Disco", "Fall Out Boy", "My Chemical Romance", "Green Day","Paramore", "Evanescence", "Radiohead", "Nirvana", "Red Hot Chili Peppers", "Foo Fighters", "Cage the Elephant","The Smiths", "Coldplay", "Arctic Monkeys", "Weezer", "Muse", "The Killers", "The Strokes", "Gorillaz"];
+	//this funtion is going to return on of the bands from my object above. going to multiply the length  with the random generator output, round down, and then use the result to index my object --> randomizing my hangman 
+		function theBand(){
+			var pick = bands2000[Math.floor(Math.random()*bands2000.length)];
+			reveal = Array(pick.length + 1).join("-").split("");  //this joins the array with  "-" between all spaces in the band names thus, i need to add one to include the last character. Becasue the join function "joins into a string" i have to return string back into an array so that I can update the correct letters guesses. Because I am going to have to repeat this...
+			return pick
+
+		};
+
+		var solution = theBand();
+		var theOne = solution.toLowerCase();
+		//... I am going to make a function that compares the user guess to the the solution, if found, i will replace the "-" in the array 'reveal' with the letter form the string "solution"
+		function check(aChar, curBand){
+			for (y = 0; y < curBand.length; y++) {
+				if (aChar == curBand[y]){
+					reveal[y] = solution[y];
+				}
+			}
+		};
+
+	//Initializing a function that will run when the user presses a key
+	document.onkeyup = function(theGame) {
+		var userGuess = theGame.key;
+		userGuess.toLowerCase(); //using method to make a letter lower case
+		
+		//checkinng if there are spaces in the solution and adding them to the display. same for "!"
+		check(" ", solution);
+		check("!", solution)
+
+		//creating an overall condition: if the joined array is the solution, display the solution and let the computer pick another band. update counters and points.
+		if (reveal.join("") == solution){
+			allGuess = []; //reset allGuess so that the game starts again
+			wins++;
+			gLeft = totalTries;
+			solution = theBand();
+			theOne = solution.toLowerCase();
+			message = "<h2>Continue to play by pressing a letter.</h2>";
+		}
+		//If the key is not in the alphabet, let the user know to guess a LETTER
+		else if (theLetters.indexOf(userGuess)== -1){var message = "Please press a letter from the alphabet :) "
+	
+		}
+		//ELSE,  continue with the game by checking all other game related conditions
+		else {
+			//check too see if the user has already guessed the current key. if so, let them know
+			if (allGuess.indexOf(userGuess) > -1 && allGuess.indexOf(userGuess) < totalTries){
+				message = "<h3>You have already guess this letter. Please review your guesses and select a different letter</h3>";
+			}
+			//I have to compare the user's guess with the lowerCase-solution. if found then I must print/display that letter onto the screen. Because I the solution has uppercase letters, I am going to pull the letters from the solution in order to display 
+			else if (theOne.indexOf(userGuess) >-1){
+				//if they are the same, reveal that letter
+				message = "<h2>Good Guess! Guess another letter!</h2>";
+				allGuess = allGuess + userGuess;
+				check(userGuess,theOne);
+						// join the array "reveal". than compare that string to the solution. if a match, display the winning message
+						if (reveal.join("") == solution){
+							message = "<h1> You Win!!! Press a key to play again.</h1>";
+						}
+			}	
+			// if the user's guess is not in the lowerCase-solution, then let them know to guess another letter, updates the counts, and then check to see if they still have guesses, if not, update the losing counts and reset the band and counts
+			else if (theOne.indexOf(userGuess) == -1) {
+				var message = "<h3> This is not a part of the solution! Please guess again. </h3>";
+				allGuess = allGuess + userGuess;
+				gLeft = gLeft -1;
+					if (gLeft==0){
+						message = "<h1> Game Over!</h1><br><h2> You Lose! Try again! </h2>";
+						reveal = solution;
+						allGuess = [];
+						losses++;
+						gLeft = totalTries;
+						solution = theBand();
+						theOne = solution.toLowerCase();
+
+					}
+			}
+
+		}
+
+
+		//going to write a string that will become my html code and print on the page.
+		var html = 	"<h1> Alternative Rock - Hangman </h1> <p> Guess which band this is!  </p> <p> Total Wins: " + wins + "</p>" +
+		"<p> Total Losses: " + losses + "</p>" +
+		"<p> Number of Guesses Left : " + gLeft + "</p>" +
+		"<h3> Your Guesses So Far: " + allGuess  + "<//h3>" +
+		"<h1>" + reveal.join("") + "</h1>" +
+		 "<p>" + message + "</p>" ;
+
+		document.querySelector("#theScreen").innerHTML = html;
+
+
+	}
+
+
+
+
+
+
+	</script>
+
+</body>
+</html>
